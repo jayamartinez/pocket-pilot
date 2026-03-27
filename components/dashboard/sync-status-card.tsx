@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 
 import { CompactInstitutionRow } from "@/components/dashboard/compact-institution-row";
 import { DashboardSectionHeader } from "@/components/dashboard/dashboard-section-header";
+import { SettingsLink } from "@/components/settings/settings-link";
 import { Card, CardContent } from "@/components/ui/card";
 import type { InstitutionSummary } from "@/lib/types/finance";
 
@@ -22,12 +22,12 @@ export function SyncStatusCard({
       <CardContent className="p-4 sm:p-5">
         <DashboardSectionHeader
           action={
-            <Link
+            <SettingsLink
               className="text-sm font-medium text-primary transition hover:text-primary/80"
-              href="/settings#connections"
+              target="connections"
             >
               Manage
-            </Link>
+            </SettingsLink>
           }
           description="Linked institutions and their current status."
           title="Institutions"

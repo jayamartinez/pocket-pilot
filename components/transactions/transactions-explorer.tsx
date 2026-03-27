@@ -1,20 +1,21 @@
 "use client";
 
 import { useDeferredValue, useEffect, useMemo, useState } from "react";
-import {
-  CalendarDays,
-  CreditCard,
-  MapPin,
-  Receipt,
-  Repeat,
-  Search,
-} from "lucide-react";
+import { CalendarDays, Search } from "lucide-react";
 
 import { EmptyState } from "@/components/shared/empty-state";
+import { FilterCombobox } from "@/components/transactions/filter-combobox";
+import { TransactionDetailsContent } from "@/components/transactions/transaction-details-content";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { formatCurrency, formatMonthDay } from "@/lib/format";
 import type { TransactionRecord } from "@/lib/types/finance";
 
@@ -45,14 +46,6 @@ function formatGroupLabel(transactionDate: string, newestDate: string) {
   return formatMonthDay(transactionDate);
 }
 
-function buildMapPattern() {
-  return {
-    backgroundColor: "#e8ebef",
-    backgroundImage:
-      "linear-gradient(90deg, rgba(255,255,255,0.88) 0 12%, transparent 12% 18%, rgba(255,255,255,0.88) 18% 30%, transparent 30% 36%, rgba(255,255,255,0.88) 36% 44%, transparent 44% 52%, rgba(255,255,255,0.88) 52% 64%, transparent 64% 70%, rgba(255,255,255,0.88) 70% 82%, transparent 82%), linear-gradient(rgba(255,255,255,0.9) 0 14%, transparent 14% 22%, rgba(255,255,255,0.9) 22% 36%, transparent 36% 44%, rgba(255,255,255,0.9) 44% 58%, transparent 58% 66%, rgba(255,255,255,0.9) 66% 80%, transparent 80%)",
-  };
-}
-
 type QuickFilter = "all" | "recurring" | "pending" | "income";
 
 export function TransactionsExplorer({
@@ -65,6 +58,7 @@ export function TransactionsExplorer({
   const [account, setAccount] = useState("all");
   const [quickFilter, setQuickFilter] = useState<QuickFilter>("all");
   const [selectedId, setSelectedId] = useState<string | null>(transactions[0]?.id ?? null);
+  const [isMobileDetailsOpen, setIsMobileDetailsOpen] = useState(false);
   const deferredQuery = useDeferredValue(query);
 
   const categories = Array.from(new Set(transactions.map((item) => item.categoryPrimary)));
@@ -100,6 +94,7 @@ export function TransactionsExplorer({
   useEffect(() => {
     if (filteredTransactions.length === 0) {
       setSelectedId(null);
+      setIsMobileDetailsOpen(false);
       return;
     }
 
@@ -107,6 +102,26 @@ export function TransactionsExplorer({
       setSelectedId(filteredTransactions[0]?.id ?? null);
     }
   }, [filteredTransactions, selectedId]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const mediaQuery = window.matchMedia("(min-width: 768px)");
+    const handleBreakpointChange = (event: MediaQueryListEvent | MediaQueryList) => {
+      if (event.matches) {
+        setIsMobileDetailsOpen(false);
+      }
+    };
+
+    handleBreakpointChange(mediaQuery);
+    mediaQuery.addEventListener("change", handleBreakpointChange);
+
+    return () => {
+      mediaQuery.removeEventListener("change", handleBreakpointChange);
+    };
+  }, []);
 
   const selectedTransaction =
     filteredTransactions.find((transaction) => transaction.id === selectedId) ?? null;
@@ -128,6 +143,14 @@ export function TransactionsExplorer({
     deferredQuery.trim().length > 0 ? `"${deferredQuery.trim()}"` : null,
   ].filter(Boolean) as string[];
 
+  const handleTransactionSelect = (transactionId: string) => {
+    setSelectedId(transactionId);
+
+    if (typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches) {
+      setIsMobileDetailsOpen(true);
+    }
+  };
+
   return (
     <div className="space-y-4">
       <Card className="border-border/80">
@@ -148,22 +171,22 @@ export function TransactionsExplorer({
                 <span>March 1 - 31, 2026</span>
               </div>
             </div>
-            <Select onChange={(event) => setCategory(event.target.value)} value={category}>
-              <option value="all">All categories</option>
-              {categories.map((item) => (
-                <option key={item} value={item}>
-                  {item}
-                </option>
-              ))}
-            </Select>
-            <Select onChange={(event) => setAccount(event.target.value)} value={account}>
-              <option value="all">All accounts</option>
-              {accounts.map((item) => (
-                <option key={item} value={item}>
-                  {item}
-                </option>
-              ))}
-            </Select>
+            <FilterCombobox
+              allLabel="All categories"
+              emptyLabel="categories"
+              onValueChange={setCategory}
+              options={categories}
+              searchPlaceholder="Search categories..."
+              value={category}
+            />
+            <FilterCombobox
+              allLabel="All accounts"
+              emptyLabel="accounts"
+              onValueChange={setAccount}
+              options={accounts}
+              searchPlaceholder="Search accounts..."
+              value={account}
+            />
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
@@ -224,7 +247,7 @@ export function TransactionsExplorer({
                             isSelected ? "bg-muted/55" : "hover:bg-muted/35"
                           }`}
                           key={transaction.id}
-                          onClick={() => setSelectedId(transaction.id)}
+                          onClick={() => handleTransactionSelect(transaction.id)}
                           type="button"
                         >
                           <div className="flex min-w-0 items-center gap-3">
@@ -276,137 +299,36 @@ export function TransactionsExplorer({
             </CardContent>
           </Card>
 
-          <Card className="border-border/80">
-            <CardContent className="space-y-5 p-4">
-              <div>
-                <h3 className="text-[1.6rem] font-semibold text-foreground">
-                  {selectedTransaction.displayName}
-                </h3>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {selectedTransaction.merchantName}
-                </p>
-              </div>
-
-              <div
-                className="relative h-34 overflow-hidden rounded-2xl border border-border/70"
-                style={buildMapPattern()}
-              >
-                <div className="absolute left-[68%] top-[42%] flex size-8 items-center justify-center rounded-full bg-card text-foreground shadow-[0_8px_18px_rgb(0_0_0_/_0.18)]">
-                  <MapPin className="size-4" />
-                </div>
-              </div>
-
-              <div className="space-y-3 rounded-2xl border border-dashed border-border bg-surface-subtle/45 p-4">
-                <div className="flex items-center gap-2">
-                  <Receipt className="size-4 text-muted-foreground" />
-                  <span className="text-sm font-medium text-foreground">Receipt</span>
-                </div>
-                <button
-                  className="rounded-xl border border-border/80 bg-card px-3 py-2 text-sm font-medium text-foreground transition hover:bg-muted/60"
-                  type="button"
-                >
-                  Upload receipt
-                </button>
-                <p className="text-sm text-muted-foreground">
-                  Drag-and-drop support can plug into this area later.
-                </p>
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex items-center justify-between rounded-2xl border border-border/70 bg-surface-subtle/45 px-4 py-3">
-                  <div className="flex items-center gap-2">
-                    <Repeat className="size-4 text-muted-foreground" />
-                    <div>
-                      <p className="text-sm font-medium text-foreground">Recurring transaction</p>
-                      <p className="text-xs text-muted-foreground">
-                        {selectedTransaction.isRecurring ? "Repeats monthly" : "Not recurring"}
-                      </p>
-                    </div>
-                  </div>
-                  <div
-                    className={`h-6 w-11 rounded-full p-1 transition ${
-                      selectedTransaction.isRecurring ? "bg-primary" : "bg-muted"
-                    }`}
-                  >
-                    <div
-                      className={`size-4 rounded-full bg-white transition ${
-                        selectedTransaction.isRecurring ? "translate-x-5" : ""
-                      }`}
-                    />
-                  </div>
-                </div>
-
-                <div className="grid gap-3">
-                  <div className="rounded-2xl border border-border/70 bg-surface-subtle/45 p-4">
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                      Amount
-                    </p>
-                    <p
-                      className={`mt-2 text-2xl font-semibold ${
-                        selectedTransaction.direction === "credit"
-                          ? "text-success"
-                          : "text-foreground"
-                      }`}
-                    >
-                      {selectedTransaction.direction === "credit" ? "+" : "-"}
-                      {formatCurrency(selectedTransaction.amount)}
-                    </p>
-                  </div>
-                  <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
-                    <div className="rounded-2xl border border-border/70 bg-surface-subtle/45 p-4">
-                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                        Category
-                      </p>
-                      <p className="mt-2 text-sm font-medium text-foreground">
-                        {selectedTransaction.categoryDetailed}
-                      </p>
-                    </div>
-                    <div className="rounded-2xl border border-border/70 bg-surface-subtle/45 p-4">
-                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                        Account
-                      </p>
-                      <div className="mt-2 flex items-center gap-2 text-sm font-medium text-foreground">
-                        <CreditCard className="size-4 text-muted-foreground" />
-                        <span>{selectedTransaction.accountName}</span>
-                      </div>
-                    </div>
-                    <div className="rounded-2xl border border-border/70 bg-surface-subtle/45 p-4">
-                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                        Date
-                      </p>
-                      <p className="mt-2 text-sm font-medium text-foreground">
-                        {formatMonthDay(selectedTransaction.date)}
-                      </p>
-                    </div>
-                    <div className="rounded-2xl border border-border/70 bg-surface-subtle/45 p-4">
-                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                        Status
-                      </p>
-                      <div className="mt-2 flex items-center gap-2">
-                        <Badge
-                          variant={
-                            selectedTransaction.pending
-                              ? "warning"
-                              : selectedTransaction.direction === "credit"
-                                ? "success"
-                                : "outline"
-                          }
-                        >
-                          {selectedTransaction.pending
-                            ? "Pending"
-                            : selectedTransaction.direction === "credit"
-                              ? "Income"
-                              : "Posted"}
-                        </Badge>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="hidden md:block">
+            <Card className="border-border/80">
+              <CardContent className="p-4">
+                <TransactionDetailsContent transaction={selectedTransaction} />
+              </CardContent>
+            </Card>
+          </div>
         </div>
       )}
+
+      {selectedTransaction ? (
+        <Sheet open={isMobileDetailsOpen} onOpenChange={setIsMobileDetailsOpen}>
+          <SheetContent
+            className="safe-bottom max-h-[85svh] gap-0 overflow-hidden rounded-t-[28px] border-border/80 bg-card px-0 pb-0 pt-0 text-card-foreground md:hidden"
+            side="bottom"
+          >
+            <SheetHeader className="border-b border-border/70 px-5 py-4 text-left">
+              <SheetTitle className="text-base font-semibold text-foreground">
+                Transaction details
+              </SheetTitle>
+              <SheetDescription>
+                Review merchant info, receipt status, and transaction metadata.
+              </SheetDescription>
+            </SheetHeader>
+            <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5">
+              <TransactionDetailsContent transaction={selectedTransaction} />
+            </div>
+          </SheetContent>
+        </Sheet>
+      ) : null}
     </div>
   );
 }

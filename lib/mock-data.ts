@@ -345,3 +345,93 @@ export const appSummary = {
   recurringMerchantCount: subscriptionSummaries.length,
   transactionCount: transactions.length,
 };
+
+export const settingsProfile = {
+  name: appSummary.userName,
+  email: "jay@pocketpilot.app",
+  phoneNumber: "(212) 555-0188",
+};
+
+export const billingSummary = {
+  currentPlan: "PocketPilot Pro",
+  monthlyCost: 24,
+  nextBillingDate: "2026-04-14",
+  paymentMethod: "Visa ending in 4242",
+};
+
+export type NotificationTone = "critical" | "warning" | "positive" | "info";
+export type NotificationCategory =
+  | "budget"
+  | "income"
+  | "insight"
+  | "security"
+  | "subscription";
+
+export interface NotificationRecord {
+  id: string;
+  title: string;
+  message: string;
+  timeLabel: string;
+  tone: NotificationTone;
+  category: NotificationCategory;
+  actionLabel: string;
+  unread: boolean;
+}
+
+export const mockNotifications: NotificationRecord[] = [
+  {
+    id: "notif_budget_transport",
+    title: "Transport budget exceeded",
+    message:
+      "Uber and parking charges pushed you $72 over your monthly transport target.",
+    timeLabel: "8m ago",
+    tone: "critical",
+    category: "budget",
+    actionLabel: "Review spending",
+    unread: true,
+  },
+  {
+    id: "notif_income_payroll",
+    title: "Payroll deposit landed",
+    message:
+      "$2,400 from Northstar Studio hit Chase Checking and boosted your cash buffer.",
+    timeLabel: "42m ago",
+    tone: "positive",
+    category: "income",
+    actionLabel: "View transaction",
+    unread: true,
+  },
+  {
+    id: "notif_security_amex",
+    title: "Amex needs attention",
+    message:
+      "PocketPilot could not refresh your Amex Gold account. Reconnect to keep balances current.",
+    timeLabel: "2h ago",
+    tone: "warning",
+    category: "security",
+    actionLabel: "Reconnect account",
+    unread: true,
+  },
+  {
+    id: "notif_subscription_netflix",
+    title: "Recurring charge matched",
+    message:
+      "Netflix renewed for $15.49. It is tracking on schedule for your April subscriptions.",
+    timeLabel: "Yesterday",
+    tone: "info",
+    category: "subscription",
+    actionLabel: "Open subscriptions",
+    unread: false,
+  },
+  {
+    id: "notif_insight_food",
+    title: "Weekly insight ready",
+    message:
+      "Groceries are down 12% week over week, leaving more room for dining and travel.",
+    timeLabel: "Yesterday",
+    tone: "info",
+    category: "insight",
+    actionLabel: "See insight",
+    unread: false,
+  },
+];

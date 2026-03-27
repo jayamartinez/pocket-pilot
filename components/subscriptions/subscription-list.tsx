@@ -1,6 +1,22 @@
+import { CompactSummaryCard } from "@/components/shared/compact-summary-card";
+import { EmptyState } from "@/components/shared/empty-state";
+import {
+  formatMonthDayLabel,
+  formatRelativeRenewal,
+  getRenewalBadgeVariant,
+  SubscriptionRow,
+} from "@/components/subscriptions/subscription-row";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { formatCurrency, formatDate } from "@/lib/format";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { formatCurrency } from "@/lib/format";
 import type { SubscriptionSummary } from "@/lib/types/finance";
 
 export function SubscriptionList({
@@ -8,6 +24,15 @@ export function SubscriptionList({
 }: {
   subscriptions: SubscriptionSummary[];
 }) {
+  if (subscriptions.length === 0) {
+    return (
+      <EmptyState
+        description="Recurring charges will appear here once PocketPilot identifies subscription activity."
+        title="No subscriptions yet"
+      />
+    );
+  }
+
   const sortedSubscriptions = [...subscriptions].sort((left, right) =>
     left.nextChargeDate.localeCompare(right.nextChargeDate),
   );
@@ -16,103 +41,108 @@ export function SubscriptionList({
     0,
   );
   const nextCharge = sortedSubscriptions[0];
-  const highConfidenceCount = subscriptions.filter(
-    (subscription) => subscription.confidence >= 0.9,
-  ).length;
 
   return (
     <div className="space-y-4">
-      <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-        <Card>
-          <CardContent className="p-3.5">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-              Monthly total
-            </p>
-            <p className="mt-2 text-3xl font-semibold text-foreground">
-              {formatCurrency(monthlyTotal)}
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-3.5">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-              Next renewal
-            </p>
-            <p className="mt-2 text-base font-semibold text-foreground">
-              {nextCharge
-                ? `${nextCharge.merchantName} on ${formatDate(nextCharge.nextChargeDate)}`
-                : "None"}
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-3.5">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-              Strong matches
-            </p>
-            <p className="mt-2 text-3xl font-semibold text-foreground">
-              {highConfidenceCount}
-            </p>
-          </CardContent>
-        </Card>
+      <section className="scrollbar-subtle overflow-x-auto px-1 pb-1 sm:px-0 sm:overflow-visible sm:pb-0">
+        <div className="flex gap-3 sm:grid sm:grid-cols-2 xl:grid-cols-3">
+          <CompactSummaryCard
+            className="min-w-[220px] sm:min-w-0"
+            label="Monthly total"
+            value={formatCurrency(monthlyTotal)}
+          />
+          <CompactSummaryCard
+            className="min-w-[220px] sm:min-w-0"
+            label="Active subscriptions"
+            value={subscriptions.length}
+          />
+          <CompactSummaryCard
+            className="min-w-[220px] sm:min-w-0"
+            label="Next renewal"
+            value={nextCharge ? formatMonthDayLabel(nextCharge.nextChargeDate) : "None"}
+          />
+        </div>
       </section>
 
-      <div className="grid gap-4 xl:grid-cols-2">
-        {sortedSubscriptions.map((subscription) => (
-          <Card key={subscription.id}>
-            <CardContent className="space-y-4 p-4">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                <div>
-                  <h3 className="text-lg font-semibold text-foreground">
-                    {subscription.merchantName}
-                  </h3>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    Next charge {formatDate(subscription.nextChargeDate)}
-                  </p>
-                </div>
-                <Badge variant={subscription.confidence >= 0.9 ? "success" : "warning"}>
-                  {subscription.confidence >= 0.9 ? "High confidence" : "Review"}
-                </Badge>
-              </div>
+      <Card className="overflow-hidden border-border/80">
+        <CardHeader className="gap-3">
+          <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+            <CardTitle>Recurring payments</CardTitle>
+            <p className="text-sm text-muted-foreground">Sorted by next renewal</p>
+          </div>
+        </CardHeader>
+        <CardContent className="p-0">
+          <div className="lg:hidden divide-y divide-border/60">
+            {sortedSubscriptions.map((subscription) => (
+              <SubscriptionRow key={subscription.id} subscription={subscription} />
+            ))}
+          </div>
+          <div className="hidden lg:block">
+            <Table>
+              <TableHeader>
+                <TableRow className="hover:bg-transparent">
+                  <TableHead>Service</TableHead>
+                  <TableHead className="text-right">Monthly</TableHead>
+                  <TableHead>Frequency</TableHead>
+                  <TableHead>Last charge</TableHead>
+                  <TableHead>Next charge</TableHead>
+                  <TableHead className="text-right">Renewal</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {sortedSubscriptions.map((subscription) => {
+                  const renewalLabel = formatRelativeRenewal(subscription.nextChargeDate);
+                  const initials = subscription.merchantName
+                    .split(" ")
+                    .slice(0, 2)
+                    .map((part) => part[0])
+                    .join("")
+                    .toUpperCase();
 
-              <div className="grid gap-3 rounded-2xl border border-border/70 bg-surface-subtle/55 p-3.5 sm:grid-cols-2">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                    Average charge
-                  </p>
-                  <p className="mt-2 text-2xl font-semibold text-foreground">
-                    {formatCurrency(subscription.averageAmount)}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                    Frequency
-                  </p>
-                  <p className="mt-2 text-xl font-semibold text-foreground capitalize">
-                    {subscription.frequency}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                    Last charge
-                  </p>
-                  <p className="mt-2 text-sm font-medium text-foreground">
-                    {formatDate(subscription.lastChargeDate)}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                    Confidence
-                  </p>
-                  <p className="mt-2 text-sm font-medium text-foreground">
-                    {(subscription.confidence * 100).toFixed(0)}% match
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+                  return (
+                    <TableRow key={subscription.id}>
+                      <TableCell className="min-w-[320px] py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-muted text-sm font-semibold text-foreground">
+                            {initials}
+                          </div>
+                          <div className="min-w-0">
+                            <p className="truncate text-sm font-semibold text-foreground">
+                              {subscription.merchantName}
+                            </p>
+                            <p className="mt-1 text-sm text-muted-foreground">
+                              {renewalLabel === "past due"
+                                ? "Renewal missed"
+                                : `Renews ${renewalLabel}`}
+                            </p>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="py-4 text-right text-sm font-semibold text-foreground">
+                        {formatCurrency(subscription.averageAmount)}
+                      </TableCell>
+                      <TableCell className="py-4 text-sm capitalize text-foreground">
+                        {subscription.frequency}
+                      </TableCell>
+                      <TableCell className="py-4 text-sm text-foreground">
+                        {formatMonthDayLabel(subscription.lastChargeDate)}
+                      </TableCell>
+                      <TableCell className="py-4 text-sm font-medium text-foreground">
+                        {formatMonthDayLabel(subscription.nextChargeDate)}
+                      </TableCell>
+                      <TableCell className="py-4 text-right">
+                        <Badge variant={getRenewalBadgeVariant(subscription.nextChargeDate)}>
+                          {renewalLabel}
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

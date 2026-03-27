@@ -119,7 +119,7 @@ export default function DashboardPage() {
         title="Dashboard"
       />
 
-      <section className="-mx-4 overflow-x-auto px-4 pb-1 lg:mx-0 lg:overflow-visible lg:px-0 lg:pb-0">
+      <section className="scrollbar-subtle overflow-x-auto px-1 pb-1 lg:overflow-visible lg:px-0 lg:pb-0">
         <div className="flex gap-3 lg:grid lg:grid-cols-4 lg:gap-2.5">
           {metricCards.map((metric) => (
             <Card
@@ -237,7 +237,7 @@ export default function DashboardPage() {
                       </div>
 
                       <Progress
-                        className="h-1.5 bg-muted/80"
+                        className="h-1.5 bg-muted/80 mb-2"
                         indicatorClassName={budgetToneClass(budget.state)}
                         value={budget.progress}
                       />

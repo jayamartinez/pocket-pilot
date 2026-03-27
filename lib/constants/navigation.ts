@@ -34,14 +34,14 @@ export const appNavigation = [
 
 export const accountNavigation = [
   {
-    title: "Profile",
-    href: "/settings#profile",
-    icon: CircleUserRound,
+    title: "Settings",
+    href: "/settings",
+    icon: Settings2,
   },
   {
-    title: "Settings",
-    href: "/settings#preferences",
-    icon: Settings2,
+    title: "Account",
+    href: "/settings#account",
+    icon: CircleUserRound,
   },
   {
     title: "Billing",

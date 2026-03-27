@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { CheckCircle2, ChevronDown, ShieldAlert } from "lucide-react";
 
+import { SettingsLink } from "@/components/settings/settings-link";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/format";
 import type { InstitutionSummary } from "@/lib/types/finance";
@@ -71,17 +71,17 @@ export function CompactInstitutionRow({
               ? "Everything looks up to date. You can refresh this connection from Settings if needed."
               : "Reconnect this institution from Settings to resume transaction imports."}
           </p>
-          <Link
+          <SettingsLink
             className={cn(
               "mt-3 inline-flex h-9 items-center justify-center rounded-md px-3 text-sm font-semibold transition-colors",
               isHealthy
                 ? "bg-card text-foreground surface-border shadow-sm hover:bg-muted/70"
                 : "bg-danger text-danger-foreground shadow-sm hover:opacity-90",
             )}
-            href="/settings#connections"
+            target="connections"
           >
             {isHealthy ? "Refresh in Settings" : "Reconnect in Settings"}
-          </Link>
+          </SettingsLink>
         </div>
       ) : null}
     </div>

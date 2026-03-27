@@ -55,14 +55,6 @@ export function AppSidebar() {
           );
         })}
       </div>
-
-      <div className="mt-auto hidden rounded-2xl border border-border/80 bg-card/70 p-4 xl:block">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-          This month
-        </p>
-        <p className="mt-2 text-2xl font-semibold text-foreground">$35,421.88</p>
-        <p className="mt-1 text-sm text-success">Up 4.2% from last month</p>
-      </div>
     </div>
   );
 }

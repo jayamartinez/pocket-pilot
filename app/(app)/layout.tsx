@@ -1,5 +1,6 @@
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 
+import { SettingsModalHost } from "@/components/settings/settings-modal-host";
 import { MobileBottomNav } from "@/components/shell/mobile-bottom-nav";
 import { AppSidebar } from "@/components/shell/app-sidebar";
 import { AppTopbar } from "@/components/shell/app-topbar";
@@ -19,6 +20,9 @@ export default function AppLayout({ children }: { children: ReactNode }) {
           <main className="flex-1 px-4 py-5 pb-28 sm:px-5 sm:py-5 sm:pb-32 lg:min-h-0 lg:px-6 lg:py-6 lg:pb-6 xl:px-7">
             {children}
           </main>
+          <Suspense fallback={null}>
+            <SettingsModalHost />
+          </Suspense>
         </div>
       </div>
       <MobileBottomNav />

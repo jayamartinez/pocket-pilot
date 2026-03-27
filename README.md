@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PocketPilot
 
-## Getting Started
+PocketPilot is a responsive personal finance dashboard built with Next.js, React, Tailwind CSS, and Convex. The current project is in a UI-first stage: the product shell and core screens are present, while most displayed data still comes from local mock data.
 
-First, run the development server:
+## Current Scope
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Dashboard with balances, spending, savings-rate, budget progress, and recent transactions
+- Transactions explorer with filtering/detail-oriented UI
+- Budgets overview
+- Subscriptions overview
+- Settings flow with desktop/mobile-aware presentation
+
+## Stack
+
+- Next.js `16.2.1`
+- React `19.2.4`
+- TypeScript
+- Tailwind CSS `4`
+- Convex
+- Clerk
+- Plaid
+- Recharts
+
+## Project Structure
+
+```text
+app/
+  layout.tsx                  Root layout, fonts, theme provider
+  globals.css                 Design tokens and global styling
+  (app)/
+    layout.tsx                Sidebar/topbar/mobile shell
+    page.tsx                  Dashboard
+    budgets/page.tsx
+    subscriptions/page.tsx
+    transactions/page.tsx
+    settings/page.tsx
+components/
+  dashboard/                  Dashboard-specific UI
+  budgets/                    Budget UI
+  subscriptions/              Subscription UI
+  transactions/               Transaction UI
+  settings/                   Settings UI
+  shell/                      Sidebar, topbar, mobile nav
+  shared/                     Shared product-level components
+  ui/                         Base primitives
+lib/
+  mock-data.ts                Current frontend data source
+  types/finance.ts            Shared finance/domain types
+convex/
+  schema.ts                   Planned backend schema
+docs/
+  project-context.md          Repo context for future agents/contributors
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Development
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Install dependencies and run the app:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+pnpm install
+pnpm dev
+```
 
-## Learn More
+Then open [http://localhost:3000](http://localhost:3000).
 
-To learn more about Next.js, take a look at the following resources:
+## Scripts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+pnpm dev
+pnpm build
+pnpm start
+pnpm lint
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Notes For Contributors
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Read `AGENTS.md` and `docs/project-context.md` before making structural changes.
+- The UI currently depends heavily on `lib/mock-data.ts`; avoid assuming screens are live-backed.
+- Convex schema already defines the intended finance entities, so future backend work should align with that model instead of inventing a parallel structure.
+- Preserve the visual system in `app/globals.css` unless a redesign is explicitly requested.
