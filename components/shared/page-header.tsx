@@ -18,7 +18,7 @@ export function PageHeader({
   return (
     <div
       className={cn(
-        "flex flex-row flex-wrap items-start justify-between gap-3 border-b border-border/70 pb-4 sm:items-end",
+        "flex flex-row flex-wrap items-center justify-between gap-3 border-b border-border/70 pb-4",
         className,
       )}
     >

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Show } from "@clerk/nextjs";
 
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -20,24 +21,37 @@ export function LandingFinalCta() {
               and future premium tracking when the paid tier is ready.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Link
-                className={cn(
-                  buttonVariants({ size: "lg" }),
-                  "rounded-full px-6 shadow-[0_14px_36px_rgb(79_140_255_/_0.22)]",
-                )}
-                href="/sign-up"
-              >
-                Sign up
-              </Link>
-              <Link
-                className={cn(
-                  buttonVariants({ size: "lg", variant: "secondary" }),
-                  "rounded-full border border-white/8 bg-card/58 px-6",
-                )}
-                href="/log-in"
-              >
-                Log in
-              </Link>
+              <Show when="signed-out">
+                <Link
+                  className={cn(
+                    buttonVariants({ size: "lg" }),
+                    "rounded-full px-6 shadow-[0_14px_36px_rgb(79_140_255_/_0.22)]",
+                  )}
+                  href="/sign-up"
+                >
+                  Sign up
+                </Link>
+                <Link
+                  className={cn(
+                    buttonVariants({ size: "lg", variant: "secondary" }),
+                    "rounded-full border border-white/8 bg-card/58 px-6",
+                  )}
+                  href="/sign-in"
+                >
+                  Log in
+                </Link>
+              </Show>
+              <Show when="signed-in">
+                <Link
+                  className={cn(
+                    buttonVariants({ size: "lg" }),
+                    "rounded-full px-6 shadow-[0_14px_36px_rgb(79_140_255_/_0.22)]",
+                  )}
+                  href="/dashboard"
+                >
+                  Open dashboard
+                </Link>
+              </Show>
             </div>
           </div>
         </div>

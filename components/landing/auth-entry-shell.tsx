@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 
 import { AppLogo } from "@/components/shared/app-logo";
 import { buttonVariants } from "@/components/ui/button";
@@ -8,14 +9,18 @@ interface AuthEntryShellProps {
   eyebrow: string;
   title: string;
   description: string;
-  primaryLabel: string;
+  alternateHref: string;
+  alternateLabel: string;
+  children: ReactNode;
 }
 
 export function AuthEntryShell({
   eyebrow,
   title,
   description,
-  primaryLabel,
+  alternateHref,
+  alternateLabel,
+  children,
 }: AuthEntryShellProps) {
   return (
     <div className="min-h-screen bg-background px-4 py-6 text-foreground sm:px-6 lg:px-8">
@@ -43,9 +48,9 @@ export function AuthEntryShell({
                 buttonVariants({ size: "lg" }),
                 "rounded-full px-6 shadow-[0_14px_36px_rgb(79_140_255_/_0.22)]",
               )}
-              href="/dashboard"
+              href={alternateHref}
             >
-              Preview dashboard
+              {alternateLabel}
             </Link>
             <Link
               className={cn(
@@ -59,11 +64,9 @@ export function AuthEntryShell({
           </div>
 
           <div className="mt-10 rounded-[26px] border border-white/8 bg-background/44 p-5">
-            <p className="text-sm font-semibold text-foreground">{primaryLabel}</p>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              Public auth routes are now in place for landing-page CTA flow. Swap this shell
-              for the real Clerk surface when authentication is wired into the app.
-            </p>
+            <div className="mx-auto flex w-full max-w-md justify-center">
+              {children}
+            </div>
           </div>
         </div>
       </main>

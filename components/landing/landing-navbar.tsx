@@ -1,5 +1,6 @@
 "use client";
 
+import { Show } from "@clerk/nextjs";
 import Link from "next/link";
 import { useEffect, useEffectEvent, useState } from "react";
 import { ArrowRight, Menu } from "lucide-react";
@@ -63,34 +64,69 @@ export function LandingNavbar() {
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
-          <Link
-            className={cn(
-              buttonVariants({ size: "default", variant: "ghost" }),
-              "rounded-full border border-white/8 bg-white/[0.02] px-4 text-muted-foreground hover:bg-white/[0.05] hover:text-foreground",
-            )}
-            href="/log-in"
-          >
-            Log in
-          </Link>
-          <Link
-            className={cn(
-              buttonVariants({ size: "default" }),
-              "rounded-full px-5 shadow-[0_10px_30px_rgb(79_140_255_/_0.28)]",
-            )}
-            href="/sign-up"
-          >
-            Sign up
-            <ArrowRight className="size-4" />
-          </Link>
+          <Show when="signed-out">
+            <Link
+              className={cn(
+                buttonVariants({ size: "default", variant: "ghost" }),
+                "rounded-full border border-white/8 bg-white/[0.02] px-4 text-muted-foreground hover:bg-white/[0.05] hover:text-foreground",
+              )}
+              href="/sign-in"
+            >
+              Log in
+            </Link>
+            <Link
+              className={cn(
+                buttonVariants({ size: "default" }),
+                "rounded-full px-5 shadow-[0_10px_30px_rgb(79_140_255_/_0.28)]",
+              )}
+              href="/sign-up"
+            >
+              Sign up
+              <ArrowRight className="size-4" />
+            </Link>
+          </Show>
+          <Show when="signed-in">
+            <Link
+              className={cn(
+                buttonVariants({ size: "default", variant: "ghost" }),
+                "rounded-full border border-white/8 bg-white/[0.02] px-4 text-muted-foreground hover:bg-white/[0.05] hover:text-foreground",
+              )}
+              href="/settings"
+            >
+              Settings
+            </Link>
+            <Link
+              className={cn(
+                buttonVariants({ size: "default" }),
+                "rounded-full px-5 shadow-[0_10px_30px_rgb(79_140_255_/_0.28)]",
+              )}
+              href="/dashboard"
+            >
+              Open dashboard
+            </Link>
+          </Show>
         </div>
 
         <div className="ml-auto flex items-center gap-2 md:hidden">
-          <Link
-            className={cn(buttonVariants({ size: "sm" }), "rounded-full px-3.5")}
-            href="/sign-up"
-          >
-            Sign up
-          </Link>
+          <Show when="signed-out">
+            <Link
+              className={cn(buttonVariants({ size: "sm" }), "rounded-full px-3.5")}
+              href="/sign-up"
+            >
+              Sign up
+            </Link>
+          </Show>
+          <Show when="signed-in">
+            <Link
+              className={cn(
+                buttonVariants({ size: "sm", variant: "secondary" }),
+                "rounded-full border border-white/8 bg-card/58 px-3.5",
+              )}
+              href="/settings"
+            >
+              Settings
+            </Link>
+          </Show>
           <Sheet>
             <SheetTrigger asChild>
               <button
@@ -124,25 +160,48 @@ export function LandingNavbar() {
                 ))}
               </nav>
               <div className="grid gap-2 px-4 pt-4">
-                <SheetClose asChild>
-                  <Link
-                    className={cn(
-                      buttonVariants({ size: "lg", variant: "secondary" }),
-                      "w-full rounded-full border border-white/8 bg-card/58",
-                    )}
-                    href="/log-in"
-                  >
-                    Log in
-                  </Link>
-                </SheetClose>
-                <SheetClose asChild>
-                  <Link
-                    className={cn(buttonVariants({ size: "lg" }), "w-full rounded-full")}
-                    href="/sign-up"
-                  >
-                    Sign up
-                  </Link>
-                </SheetClose>
+                <Show when="signed-out">
+                  <SheetClose asChild>
+                    <Link
+                      className={cn(
+                        buttonVariants({ size: "lg", variant: "secondary" }),
+                        "w-full rounded-full border border-white/8 bg-card/58",
+                      )}
+                      href="/sign-in"
+                    >
+                      Log in
+                    </Link>
+                  </SheetClose>
+                  <SheetClose asChild>
+                    <Link
+                      className={cn(buttonVariants({ size: "lg" }), "w-full rounded-full")}
+                      href="/sign-up"
+                    >
+                      Sign up
+                    </Link>
+                  </SheetClose>
+                </Show>
+                <Show when="signed-in">
+                  <SheetClose asChild>
+                    <Link
+                      className={cn(
+                        buttonVariants({ size: "lg", variant: "secondary" }),
+                        "w-full rounded-full border border-white/8 bg-card/58",
+                      )}
+                      href="/settings"
+                    >
+                      Account settings
+                    </Link>
+                  </SheetClose>
+                  <SheetClose asChild>
+                    <Link
+                      className={cn(buttonVariants({ size: "lg" }), "w-full rounded-full")}
+                      href="/dashboard"
+                    >
+                      Open dashboard
+                    </Link>
+                  </SheetClose>
+                </Show>
               </div>
             </SheetContent>
           </Sheet>

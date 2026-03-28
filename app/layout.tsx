@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ClerkProvider } from "@clerk/nextjs";
 import { IBM_Plex_Mono, Plus_Jakarta_Sans } from "next/font/google";
 
 import { ThemeProvider } from "@/components/theme-provider";
@@ -33,7 +34,15 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full bg-background text-foreground font-sans">
-        <ThemeProvider>{children}</ThemeProvider>
+        <ClerkProvider
+          afterSignOutUrl="/"
+          signInFallbackRedirectUrl="/dashboard"
+          signInUrl="/sign-in"
+          signUpFallbackRedirectUrl="/dashboard"
+          signUpUrl="/sign-up"
+        >
+          <ThemeProvider>{children}</ThemeProvider>
+        </ClerkProvider>
       </body>
     </html>
   );

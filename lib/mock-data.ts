@@ -8,6 +8,7 @@ import type {
   SubscriptionSummary,
   TransactionRecord,
 } from "@/lib/types/finance";
+import type { SettingsPreferences } from "@/lib/types/settings";
 
 export const dashboardMetrics: DashboardMetric[] = [
   {
@@ -346,17 +347,20 @@ export const appSummary = {
   transactionCount: transactions.length,
 };
 
-export const settingsProfile = {
-  name: appSummary.userName,
-  email: "jay@pocketpilot.app",
-  phoneNumber: "(212) 555-0188",
-};
-
 export const billingSummary = {
   currentPlan: "PocketPilot Pro",
   monthlyCost: 24,
   nextBillingDate: "2026-04-14",
   paymentMethod: "Visa ending in 4242",
+};
+
+export const settingsPreferenceDefaults: SettingsPreferences = {
+  currency: "USD",
+  dateFormat: "month-day-year",
+  budgetAlerts: true,
+  weeklyDigest: true,
+  syncAlerts: true,
+  theme: "dark",
 };
 
 export type NotificationTone = "critical" | "warning" | "positive" | "info";

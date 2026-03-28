@@ -19,8 +19,8 @@ export function SettingsPageShell() {
   };
 
   return (
-    <div className="lg:mx-auto lg:max-w-3xl lg:py-3">
-      <div className="space-y-5 lg:space-y-0 lg:overflow-hidden lg:rounded-[28px] lg:bg-card/98 lg:surface-border lg:surface-shadow">
+    <div className="lg:mx-auto lg:max-w-4xl lg:py-3">
+      <div className="space-y-4 lg:space-y-0 lg:overflow-hidden lg:rounded-[28px] lg:bg-card/98 lg:surface-border lg:surface-shadow">
         <div className="relative flex items-center justify-center border-b border-border/70 pb-4 lg:justify-between lg:px-6 lg:py-4">
           <Button
             aria-label="Go back"
@@ -45,7 +45,7 @@ export function SettingsPageShell() {
           </Button>
         </div>
 
-        <div className="lg:px-6 lg:py-6">
+        <div className="lg:px-6 lg:py-5">
           <SettingsContent />
         </div>
       </div>

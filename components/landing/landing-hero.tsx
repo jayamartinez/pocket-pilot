@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Show } from "@clerk/nextjs";
 import { ArrowRight } from "lucide-react";
 
 import dashboardPreview from "@/public/images/landing/dashboard-preview.png";
@@ -33,16 +34,30 @@ export function LandingHero() {
             </p>
 
             <div className="mt-8 flex flex-wrap justify-center gap-3 lg:justify-start">
-              <Link
-                className={cn(
-                  buttonVariants({ size: "lg" }),
-                  "rounded-full px-6 shadow-[0_14px_36px_rgb(79_140_255_/_0.24)]",
-                )}
-                href="/sign-up"
-              >
-                Sign up
-                <ArrowRight className="size-4" />
-              </Link>
+              <Show when="signed-out">
+                <Link
+                  className={cn(
+                    buttonVariants({ size: "lg" }),
+                    "rounded-full px-6 shadow-[0_14px_36px_rgb(79_140_255_/_0.24)]",
+                  )}
+                  href="/sign-up"
+                >
+                  Sign up
+                  <ArrowRight className="size-4" />
+                </Link>
+              </Show>
+              <Show when="signed-in">
+                <Link
+                  className={cn(
+                    buttonVariants({ size: "lg" }),
+                    "rounded-full px-6 shadow-[0_14px_36px_rgb(79_140_255_/_0.24)]",
+                  )}
+                  href="/dashboard"
+                >
+                  Open dashboard
+                  <ArrowRight className="size-4" />
+                </Link>
+              </Show>
             </div>
           </div>
 

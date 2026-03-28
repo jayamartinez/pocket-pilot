@@ -1,8 +1,11 @@
 export const settingsTargets = [
   "overview",
   "account",
+  "security",
   "billing",
   "connections",
+  "preferences",
+  "danger",
 ] as const;
 
 export type SettingsTarget = (typeof settingsTargets)[number];

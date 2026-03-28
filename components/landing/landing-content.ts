@@ -69,6 +69,6 @@ export const pricingTiers = [
 export const landingFooterLinks = [
   { href: "#features", label: "Features" },
   { href: "#pricing", label: "Pricing" },
-  { href: "/log-in", label: "Log in" },
+  { href: "/sign-in", label: "Log in" },
   { href: "/sign-up", label: "Sign up" },
 ] as const;

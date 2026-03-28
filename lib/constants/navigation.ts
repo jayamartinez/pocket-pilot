@@ -1,11 +1,12 @@
 import {
   ArrowDownUp,
   CircleDollarSign,
-  CircleUserRound,
   CreditCard,
   LayoutDashboard,
   PiggyBank,
   Settings2,
+  ShieldCheck,
+  SlidersHorizontal,
   WalletCards,
 } from "lucide-react";
 
@@ -39,9 +40,9 @@ export const accountNavigation = [
     icon: Settings2,
   },
   {
-    title: "Account",
-    href: "/settings#account",
-    icon: CircleUserRound,
+    title: "Security",
+    href: "/settings#security",
+    icon: ShieldCheck,
   },
   {
     title: "Billing",
@@ -52,5 +53,10 @@ export const accountNavigation = [
     title: "Connected accounts",
     href: "/settings#connections",
     icon: WalletCards,
+  },
+  {
+    title: "Preferences",
+    href: "/settings#preferences",
+    icon: SlidersHorizontal,
   },
 ] as const;

@@ -146,7 +146,7 @@ export function SettingsModalHost() {
         type="button"
       />
 
-      <div className="relative mx-auto flex h-full max-w-3xl items-start justify-center">
+      <div className="relative mx-auto flex h-full max-w-4xl items-start justify-center">
         <div
           aria-labelledby="settings-modal-title"
           aria-modal="true"
