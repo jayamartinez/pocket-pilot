@@ -15,7 +15,7 @@ export function SettingsPageShell() {
       return;
     }
 
-    router.push("/");
+    router.push("/dashboard");
   };
 
   return (

@@ -14,9 +14,7 @@ import { useTheme } from "next-themes";
 
 import { SettingsLink } from "@/components/settings/settings-link";
 import type { SettingsTarget } from "@/components/settings/settings-targets";
-import { Badge } from "@/components/ui/badge";
 import { accountNavigation } from "@/lib/constants/navigation";
-import { appSummary } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
 
 export function ProfileMenu() {

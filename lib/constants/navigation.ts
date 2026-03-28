@@ -12,7 +12,7 @@ import {
 export const appNavigation = [
   {
     title: "Dashboard",
-    href: "/",
+    href: "/dashboard",
     icon: LayoutDashboard,
   },
   {

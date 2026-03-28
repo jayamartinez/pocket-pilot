@@ -138,8 +138,9 @@ export default function DashboardPage() {
                   </div>
 
                   <div
-                    className={`flex items-center gap-1 text-xs font-semibold ${metric.positive ? "text-success" : "text-danger"
-                      }`}
+                    className={`flex items-center gap-1 text-xs font-semibold ${
+                      metric.positive ? "text-success" : "text-danger"
+                    }`}
                   >
                     {metric.positive ? (
                       <ArrowUpRight className="size-4" />
@@ -220,12 +221,13 @@ export default function DashboardPage() {
                             {budget.categoryPrimary}
                           </p>
                           <span
-                            className={`rounded-full px-1.5 py-0.5 text-[10px] font-medium ${budget.state === "over"
-                              ? "bg-danger/14 text-danger"
-                              : budget.state === "warning"
-                                ? "bg-amber-400/12 text-amber-400"
-                                : "bg-success/14 text-success"
-                              }`}
+                            className={`rounded-full px-1.5 py-0.5 text-[10px] font-medium ${
+                              budget.state === "over"
+                                ? "bg-danger/14 text-danger"
+                                : budget.state === "warning"
+                                  ? "bg-amber-400/12 text-amber-400"
+                                  : "bg-success/14 text-success"
+                            }`}
                           >
                             {budgetStatus(budget.state)}
                           </span>
@@ -237,7 +239,7 @@ export default function DashboardPage() {
                       </div>
 
                       <Progress
-                        className="h-1.5 bg-muted/80 mb-2"
+                        className="mb-2 h-1.5 bg-muted/80"
                         indicatorClassName={budgetToneClass(budget.state)}
                         value={budget.progress}
                       />

@@ -99,6 +99,19 @@ html {
   scroll-behavior: smooth;
 }
 
+html.lenis {
+  height: auto;
+  scroll-behavior: auto;
+}
+
+html.lenis body {
+  height: auto;
+}
+
+html.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
 body {
   background:
     radial-gradient(circle at top left, rgb(79 140 255 / 0.1), transparent 28%),
