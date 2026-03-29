@@ -1,4 +1,4 @@
-export type CurrencyPreference = "USD" | "EUR" | "GBP";
+export type CurrencyPreference = "USD" | "EUR" | "GBP" | "CAD" | "AUD" | "JPY" | "CHF" | "CNY" | "INR" | "BRL" | "MXN" | "KRW";
 export type DateFormatPreference =
   | "month-day-year"
   | "day-month-year"

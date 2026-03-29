@@ -9,6 +9,16 @@ export default defineSchema({
     lastName: v.optional(v.string()),
     imageUrl: v.optional(v.string()),
     defaultCurrency: v.string(),
+    onboardingCompleted: v.optional(v.boolean()),
+    onboardingStep: v.optional(
+      v.union(
+        v.literal("welcome"),
+        v.literal("connect-bank"),
+        v.literal("completion"),
+      ),
+    ),
+    hasConnectedBank: v.optional(v.boolean()),
+    firstSyncCompleted: v.optional(v.boolean()),
     createdAt: v.number(),
     updatedAt: v.number(),
   }).index("by_clerk_user_id", ["clerkUserId"]),

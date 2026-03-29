@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { IBM_Plex_Mono, Plus_Jakarta_Sans } from "next/font/google";
 
+import { CurrentUserProvider } from "@/components/auth/current-user-provider";
+import { ConvexClientProvider } from "@/components/providers/convex-client-provider";
 import { ThemeProvider } from "@/components/theme-provider";
 
 import "./globals.css";
@@ -41,7 +43,11 @@ export default function RootLayout({
           signUpFallbackRedirectUrl="/dashboard"
           signUpUrl="/sign-up"
         >
-          <ThemeProvider>{children}</ThemeProvider>
+          <ConvexClientProvider>
+            <CurrentUserProvider>
+              <ThemeProvider>{children}</ThemeProvider>
+            </CurrentUserProvider>
+          </ConvexClientProvider>
         </ClerkProvider>
       </body>
     </html>
